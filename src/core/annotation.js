@@ -792,10 +792,14 @@ var ButtonWidgetAnnotation = (function ButtonWidgetAnnotationClosure() {
                           !this.hasFieldFlag(AnnotationFieldFlag.PUSHBUTTON);
 
     if (this.data.checkBox || this.data.radioButton) {
-      // Set fieldValue
+      // Set fieldValue & alternativeText
       if (this.data.checkBox) { // For checkbox button widgets
         if (isName(this.data.fieldValue)) {
           this.data.fieldValue = this.data.fieldValue.name;
+        }
+
+        if (isDict(params.dict) && params.dict.has('TU')) {
+          this.data.alternativeText = params.dict.get('TU');
         }
       } else { // For radio button widgets
         this.data.fieldValue = this.data.buttonValue = null;
@@ -808,6 +812,11 @@ var ButtonWidgetAnnotation = (function ButtonWidgetAnnotationClosure() {
           if (isName(fieldParentValue)) {
             this.data.fieldValue = fieldParentValue.name;
           }
+        }
+
+        if (isDict(fieldParent) && fieldParent.has('TU')) {
+          var fieldParentTooltip = fieldParent.get('TU');
+          this.data.alternativeText = fieldParentTooltip;
         }
       }
 
