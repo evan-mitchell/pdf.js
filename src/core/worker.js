@@ -14,7 +14,7 @@
  */
 /* globals process, __pdfjsdev_webpack__ */
 
-'use strict';
+// 'use strict';
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {

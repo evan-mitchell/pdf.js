@@ -26,7 +26,7 @@ if (typeof PDFJSDev === 'undefined' || !PDFJSDev.test('PRODUCTION')) {
   })(importScripts);
 }
 
-importScripts('../node_modules/requirejs/require.js');
+importScripts('../web/require.js');
 
 require.config({paths: {'pdfjs': '.'}});
 require(['pdfjs/core/network', 'pdfjs/core/worker'],
