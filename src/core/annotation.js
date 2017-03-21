@@ -638,7 +638,7 @@ var WidgetAnnotation = (function WidgetAnnotationClosure() {
     data.fieldName = this._constructFieldName(dict);
     data.fieldValue = Util.getInheritableProperty(dict, 'V',
                                                   /* getArray = */ true);
-    data.alternativeText = _constructFieldAlternativeText(dict);
+    data.alternativeText = this._constructFieldAlternativeText(dict);
     data.defaultAppearance = Util.getInheritableProperty(dict, 'DA') || '';
     var fieldType = Util.getInheritableProperty(dict, 'FT');
     data.fieldType = isName(fieldType) ? fieldType.name : null;
@@ -707,7 +707,7 @@ var WidgetAnnotation = (function WidgetAnnotationClosure() {
      * @param {Dict} dict - Complete widget annotation dictionary
      * @return {string}
      */
-    _constructFieldAlternativeText: function WidgetAnnotation_constructFieldName(dict) {
+    _constructFieldAlternativeText: function WidgetAnnotation_constructFieldAlternativeText(dict) {
       // Both the `Parent` and `TU` fields are optional. While at least one of
       // them should be provided, bad PDF generators may fail to do so.
       if (!dict.has('TU') && !dict.has('Parent')) {
