@@ -638,7 +638,7 @@ var WidgetAnnotation = (function WidgetAnnotationClosure() {
     data.fieldName = this._constructFieldName(dict);
     data.fieldValue = Util.getInheritableProperty(dict, 'V',
                                                   /* getArray = */ true);
-    data.alternativeText = stringToPDFString(dict.get('TU') || '');
+    data.alternativeText = _constructFieldAlternativeText(dict);
     data.defaultAppearance = Util.getInheritableProperty(dict, 'DA') || '';
     var fieldType = Util.getInheritableProperty(dict, 'FT');
     data.fieldType = isName(fieldType) ? fieldType.name : null;
@@ -693,6 +693,46 @@ var WidgetAnnotation = (function WidgetAnnotationClosure() {
 
         if (loopDict.has('T')) {
           fieldName.unshift(stringToPDFString(loopDict.get('T')));
+        }
+      }
+      return fieldName.join('.');
+    },
+
+    /**
+     * Construct the (fully qualified) field alternative text from the (partial) field
+     * names of the field and its ancestors.
+     *
+     * @private
+     * @memberof WidgetAnnotation
+     * @param {Dict} dict - Complete widget annotation dictionary
+     * @return {string}
+     */
+    _constructFieldAlternativeText: function WidgetAnnotation_constructFieldName(dict) {
+      // Both the `Parent` and `TU` fields are optional. While at least one of
+      // them should be provided, bad PDF generators may fail to do so.
+      if (!dict.has('TU') && !dict.has('Parent')) {
+        warn('Unknown alternative text, falling back to empty alternative text.');
+        return '';
+      }
+
+      // If no parent exists, the partial and fully qualified alternative text are equal.
+      if (!dict.has('Parent')) {
+        return stringToPDFString(dict.get('TU'));
+      }
+
+      // Form the fully qualified field alternative text by appending the partial alternative text to
+      // the parent's fully qualified alternative text, separated by a period.
+      var fieldName = [];
+      if (dict.has('TU')) {
+        fieldName.unshift(stringToPDFString(dict.get('TU')));
+      }
+
+      var loopDict = dict;
+      while (loopDict.has('Parent')) {
+        loopDict = loopDict.get('Parent');
+
+        if (loopDict.has('TU')) {
+          fieldName.unshift(stringToPDFString(loopDict.get('TU')));
         }
       }
       return fieldName.join('.');
